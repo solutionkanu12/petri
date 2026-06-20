@@ -279,15 +279,19 @@ export default function Landing({ onEnter }: Props) {
             Questions, answered.
           </div>
           {FAQ.map((item, i) => (
-            <div
-              className={`faq-item reveal${openFaq === i ? " open" : ""}`}
-              key={i}
-              onClick={() => setOpenFaq((cur) => (cur === i ? -1 : i))}
-            >
-              <div className="faq-q">
-                {item.q} <span className="sign">+</span>
+            // Outer .reveal is observer-managed (className stays constant, so React never
+            // clobbers the `in` class it adds); the inner .faq-item carries the React-managed
+            // open/closed toggle. Keeping them on separate elements is what fixes the bug.
+            <div className="reveal" key={i}>
+              <div
+                className={`faq-item${openFaq === i ? " open" : ""}`}
+                onClick={() => setOpenFaq((cur) => (cur === i ? -1 : i))}
+              >
+                <div className="faq-q">
+                  {item.q} <span className="sign">+</span>
+                </div>
+                <div className="faq-a">{item.a}</div>
               </div>
-              <div className="faq-a">{item.a}</div>
             </div>
           ))}
         </div>
