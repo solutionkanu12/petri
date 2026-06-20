@@ -245,6 +245,8 @@ html { scroll-behavior: smooth; }
 }
 .landing .trusted .marq { display: inline-flex; gap: 60px; white-space: nowrap; animation: scroll 26s linear infinite; }
 .landing .trusted .marq span { flex: 0 0 auto; }
+.landing .trusted .marq .marq-item { display: inline-flex; align-items: center; gap: 10px; }
+.landing .trusted .marq .marq-logo { width: 24px; height: 24px; object-fit: contain; border-radius: 6px; display: block; }
 @keyframes scroll { to { transform: translateX(-50%); } }
 
 /* light band */

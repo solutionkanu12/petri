@@ -13,6 +13,14 @@ const WALLETS = [
   { id: "cosmostation", name: "Cosmostation", ready: false, logo: "/wallets/cosmostation.svg" },
 ] as const;
 
+// "Built on the interchain" marquee: logo + name pairs, scrolled in a continuous loop.
+const MARQUEE = [
+  { name: "Cosmos Hub", logo: "/cosmos.png" },
+  { name: "Osmosis", logo: "/osmosis.png" },
+  { name: "CosmWasm", logo: "/cosmwasm.png" },
+  { name: "Mad Scientists", logo: "/madscientists.png" },
+] as const;
+
 // Renders the wallet's official logo, falling back to a letter badge if the asset is missing
 // or fails to load.
 function WalletIcon({ name, src }: { name: string; src?: string }) {
@@ -245,14 +253,18 @@ export default function Landing({ onEnter, onNavigate }: Props) {
             <span className="trusted-label">Built on the interchain</span>
             <div className="marq-mask">
               <div className="marq">
-                {["Cosmos Hub", "Osmosis", "CosmWasm", "IBC", "Keplr"].concat([
-                  "Cosmos Hub",
-                  "Osmosis",
-                  "CosmWasm",
-                  "IBC",
-                  "Keplr",
-                ]).map((name, i) => (
-                  <span key={i}>{name}</span>
+                {[...MARQUEE, ...MARQUEE].map((item, i) => (
+                  <span className="marq-item" key={i}>
+                    <img
+                      className="marq-logo"
+                      src={item.logo}
+                      alt=""
+                      onError={(e) => {
+                        e.currentTarget.style.display = "none";
+                      }}
+                    />
+                    {item.name}
+                  </span>
                 ))}
               </div>
             </div>
