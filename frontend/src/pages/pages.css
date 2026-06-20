@@ -1,0 +1,121 @@
+/* Petri content pages (About, Docs, Guide, Litepaper, Privacy, Terms).
+   Matches the landing aesthetic; tokens come from global.css :root. */
+
+.docpage {
+  min-height: 100vh;
+  color: var(--bone);
+  font-family: var(--body);
+  background: var(--ink);
+}
+
+.docpage .doc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 22px;
+}
+.docpage .doc-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 22px;
+  color: var(--bone);
+}
+.docpage .doc-brand img { width: 24px; height: 24px; border-radius: 6px; display: block; }
+.docpage .doc-back {
+  background: transparent;
+  border: 0.5px solid rgba(255, 255, 255, 0.18);
+  color: var(--bone-dim);
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-family: var(--body);
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.docpage .doc-back:hover { color: var(--bone); border-color: var(--blue); }
+
+.docpage .doc-article { max-width: 760px; margin: 0 auto; padding: 24px 22px 72px; }
+.docpage .doc-eyebrow {
+  font-family: var(--body);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  margin-bottom: 8px;
+}
+.docpage .doc-article h1 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(34px, 6vw, 56px);
+  line-height: 1.04;
+  color: #fff;
+  margin: 0 0 18px;
+}
+.docpage .doc-article h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 26px;
+  color: var(--bone);
+  margin: 34px 0 12px;
+}
+.docpage .doc-article p {
+  font-family: var(--body);
+  font-size: 16px;
+  color: var(--bone-dim);
+  line-height: 1.7;
+  margin: 0 0 14px;
+}
+.docpage .doc-article ol,
+.docpage .doc-article ul {
+  font-family: var(--body);
+  font-size: 16px;
+  color: var(--bone-dim);
+  line-height: 1.7;
+  padding-left: 22px;
+  margin: 0 0 16px;
+}
+.docpage .doc-article li { margin-bottom: 10px; }
+.docpage .doc-article .doc-note {
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: var(--bone-dim);
+  font-size: 14px;
+}
+
+.docpage .doc-foot {
+  border-top: 0.5px solid rgba(255, 255, 255, 0.06);
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 24px 22px 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  color: var(--bone-faint);
+  font-size: 13px;
+}
+.docpage .doc-foot nav { display: flex; gap: 16px; flex-wrap: wrap; }
+.docpage .doc-foot button {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  color: var(--bone-dim);
+  font-family: var(--body);
+  font-size: 13px;
+  transition: color 0.2s ease;
+}
+.docpage .doc-foot button:hover { color: var(--bone); }

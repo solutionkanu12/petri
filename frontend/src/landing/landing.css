@@ -337,7 +337,7 @@ html { scroll-behavior: smooth; }
 
 /* footer */
 .landing footer { position: relative; padding: 70px 0 0; overflow: hidden; border-top: 0.5px solid rgba(255, 255, 255, 0.06); }
-.landing .foot-cols { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; position: relative; z-index: 3; }
+.landing .foot-cols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 30px; position: relative; z-index: 3; }
 .landing .foot-cols h5 { font-family: system-ui, sans-serif; font-size: 13px; color: var(--bone-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
 .landing .foot-cols a { font-family: system-ui, sans-serif; display: block; font-size: 15px; color: var(--bone-dim); margin-bottom: 11px; transition: color 0.2s, transform 0.2s; }
 .landing .foot-cols a:hover { color: var(--bone); transform: translateX(4px); }

@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { usePetriStore } from "../state/store";
 import { connectKeplr } from "../chain/keplr";
+import type { PageId } from "../pages/DocPage";
 import "./landing.css";
 
 // Cosmos wallets shown in the picker. Only Keplr is wired today; the rest are surfaced as
@@ -30,6 +31,7 @@ function WalletIcon({ name, src }: { name: string; src?: string }) {
 // switches the root into the existing market dashboard. Reproduces petri-velfi-style_2.html.
 interface Props {
   onEnter: () => void;
+  onNavigate: (page: PageId) => void;
 }
 
 const FAQ = [
@@ -51,7 +53,7 @@ const FAQ = [
   },
 ];
 
-export default function Landing({ onEnter }: Props) {
+export default function Landing({ onEnter, onNavigate }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
   const footerRef = useRef<HTMLElement>(null);
   const [shrink, setShrink] = useState(false);
@@ -112,6 +114,12 @@ export default function Landing({ onEnter }: Props) {
   function scrollToJoin() {
     document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  // Footer link to an in-site content page (keeps the anchor styling, intercepts navigation).
+  const navTo = (page: PageId) => (e: MouseEvent) => {
+    e.preventDefault();
+    onNavigate(page);
+  };
 
   function openPicker() {
     setWalletError(null);
@@ -382,21 +390,28 @@ export default function Landing({ onEnter }: Props) {
             </div>
             <div>
               <h5>Resources</h5>
-              <a href="#">Docs</a>
-              <a href="#">Litepaper</a>
-              <a href="#">GitHub</a>
+              <a href="#" onClick={navTo("docs")}>Docs</a>
+              <a href="#" onClick={navTo("litepaper")}>Litepaper</a>
+              <a href="#" onClick={navTo("guide")}>Guide</a>
             </div>
             <div>
               <h5>Built on</h5>
-              <a href="#">Cosmos Hub</a>
-              <a href="#">Osmosis</a>
-              <a href="#">CosmWasm</a>
+              <a href="https://cosmos.network/" target="_blank" rel="noreferrer">Cosmos Hub</a>
+              <a href="https://osmosis.zone/" target="_blank" rel="noreferrer">Osmosis</a>
+              <a href="https://cosmwasm.com/" target="_blank" rel="noreferrer">CosmWasm</a>
             </div>
             <div>
               <h5>Community</h5>
-              <a href="#">Mad Scientists</a>
-              <a href="#">Discord</a>
-              <a href="#">X</a>
+              <a href="https://www.madscientists.io/" target="_blank" rel="noreferrer">Mad Scientists</a>
+              <a href="https://discord.com/invite/q7zgmdKtKW" target="_blank" rel="noreferrer">Discord</a>
+              <a href="https://x.com/solution_o1" target="_blank" rel="noreferrer">X</a>
+              <a href="https://github.com/solutionkanu12/petri" target="_blank" rel="noreferrer">GitHub</a>
+            </div>
+            <div>
+              <h5>Project</h5>
+              <a href="#" onClick={navTo("about")}>About</a>
+              <a href="#" onClick={navTo("privacy")}>Privacy Policy</a>
+              <a href="#" onClick={navTo("terms")}>Terms of Service</a>
             </div>
           </div>
           <div className="foot-bottom">
