@@ -1,44 +1,45 @@
-import { castVote, VOTE_OPTION } from "../chain/vote";
-import type { VoteOptionValue } from "../chain/vote";
 import type { VoteStatus } from "../types";
-import { usePetriStore } from "../state/store";
+import { chainConfig } from "../chain/config";
 
-// Must-have #5/#7: the prominent prompt to cast the real vote — the reflexive moment.
-// All four options are offered equally; Petri does not favor any direction.
+// The reflexive moment: prompt the user to cast their real governance vote, and reflect the
+// not-voted -> voted status read from x/gov. We link out to the chain's gov UI to vote rather
+// than casting from here, and we only ever show THAT they voted — never which way.
 interface Props {
   voteStatus: VoteStatus;
+  rechecking: boolean;
+  onRecheck: () => void;
 }
 
-const OPTIONS: { label: string; value: VoteOptionValue }[] = [
-  { label: "Yes", value: VOTE_OPTION.YES },
-  { label: "No", value: VOTE_OPTION.NO },
-  { label: "No with veto", value: VOTE_OPTION.NO_WITH_VETO },
-  { label: "Abstain", value: VOTE_OPTION.ABSTAIN },
-];
-
-export function VotePrompt({ voteStatus }: Props) {
-  const client = usePetriStore((s) => s.client);
-  const address = usePetriStore((s) => s.address);
-
-  if (voteStatus === "voted") {
-    return <p className="vote-prompt done">vote on record. the gate is open to you.</p>;
-  }
-
-  async function onVote(option: VoteOptionValue) {
-    if (!client || !address) return;
-    await castVote(client, address, option);
-    // After broadcast, re-check existence via gov.hasVoted and flip the pill.
-  }
+export function VotePrompt({ voteStatus, rechecking, onRecheck }: Props) {
+  const voteUrl = `${chainConfig.explorerBase}/proposals/${chainConfig.proposalId}`;
 
   return (
-    <section className="vote-prompt">
-      <p>cast your real vote on the proposal. claiming requires a vote on record.</p>
-      <div className="vote-options">
-        {OPTIONS.map((o) => (
-          <button key={o.value} onClick={() => onVote(o.value)} disabled={!client}>
-            {o.label}
-          </button>
-        ))}
+    <section className="action vote">
+      <h3 className="action-h">cast your vote</h3>
+
+      <div className={`vote-status vote-status-${voteStatus}`}>
+        <span className="vote-dot" />
+        {voteStatus === "voted"
+          ? "voted — the claim gate is open to you"
+          : voteStatus === "not_voted"
+            ? "not voted"
+            : "vote status unknown"}
+      </div>
+
+      {voteStatus !== "voted" && (
+        <p className="action-note">
+          Claiming requires a vote on record. Petri checks only that you voted, never how —
+          any option counts the same.
+        </p>
+      )}
+
+      <div className="vote-actions">
+        <a className="link-btn" href={voteUrl} target="_blank" rel="noreferrer">
+          open proposal to vote ↗
+        </a>
+        <button type="button" className="ghost" onClick={onRecheck} disabled={rechecking}>
+          {rechecking ? "checking..." : "re-check vote"}
+        </button>
       </div>
     </section>
   );

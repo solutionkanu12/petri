@@ -210,6 +210,176 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   color: var(--bone-faint);
 }
 
+/* ---------------- action panels (bet / vote / claim) ---------------- */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  margin-top: 22px;
+}
+.actions-col { display: flex; flex-direction: column; gap: 22px; }
+@media (max-width: 680px) {
+  .actions { grid-template-columns: 1fr; }
+}
+
+.action {
+  background: var(--panel);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius);
+  padding: 26px 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.action-h {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  font-weight: 600;
+}
+.action-note { margin: 0; font-size: 13px; color: var(--bone-dim); line-height: 1.55; }
+
+/* bet form */
+.bet-outcomes { display: flex; gap: 10px; }
+.bet-chip {
+  flex: 1;
+  font-family: var(--body);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--bone-dim);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px 8px;
+}
+.bet-chip:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); }
+.bet-chip.is-active { color: var(--ink); border-color: transparent; }
+.bet-chip-pass.is-active { background: var(--pass); }
+.bet-chip-fail.is-active { background: var(--fail); }
+.bet-chip-quorum_fails.is-active { background: var(--quorum_fails); }
+
+.bet-amount { display: flex; flex-direction: column; gap: 8px; }
+.bet-amount span {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+.bet-amount input {
+  background: var(--ink-soft);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 13px 14px;
+  color: var(--bone);
+  font-family: var(--display);
+  font-size: 22px;
+}
+.bet-amount input:focus { outline: none; border-color: var(--blue); }
+
+.bet-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 14px 16px;
+  min-height: 56px;
+  justify-content: center;
+}
+.bet-preview-key {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+.bet-preview-val { font-family: var(--display); font-size: 24px; color: #fff; }
+.bet-preview-val em { font-style: normal; font-size: 15px; color: var(--blue-bright); }
+
+button.primary { align-self: stretch; padding: 13px 22px; font-size: 16px; }
+
+/* vote prompt */
+.vote-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--bone-dim);
+}
+.vote-dot { width: 10px; height: 10px; border-radius: 999px; background: var(--bone-faint); }
+.vote-status-not_voted .vote-dot { background: var(--fail); }
+.vote-status-voted { color: var(--pass); }
+.vote-status-voted .vote-dot { background: var(--pass); }
+
+.vote-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.link-btn {
+  flex: 1;
+  text-align: center;
+  text-decoration: none;
+  background: var(--blue);
+  color: #fff;
+  font-size: 15px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: background 0.25s ease;
+}
+.link-btn:hover { background: var(--blue-bright); }
+button.ghost {
+  background: transparent;
+  color: var(--bone-dim);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+button.ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06); }
+
+/* claim panel */
+.claim-msg { margin: 0; font-size: 14px; line-height: 1.55; }
+.claim-msg.is-info { color: var(--bone-dim); }
+.claim-msg.is-ok { color: var(--pass); }
+.claim-msg.is-block {
+  color: var(--bone);
+  background: color-mix(in srgb, var(--fail) 16%, transparent);
+  border: 1px solid var(--fail);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.claim-amount { margin: 0; font-family: var(--display); font-size: 24px; color: #fff; }
+
+/* tx banner */
+.tx-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 13px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+.tx-banner.is-pending { background: rgba(255, 255, 255, 0.05); color: var(--bone-dim); }
+.tx-banner.is-ok { background: color-mix(in srgb, var(--pass) 16%, transparent); color: var(--bone); border-color: var(--pass); }
+.tx-banner.is-err {
+  background: color-mix(in srgb, var(--fail) 16%, transparent);
+  color: var(--bone);
+  border-color: var(--fail);
+  border-radius: 14px;
+  word-break: break-word;
+}
+.tx-dismiss { margin-left: auto; background: transparent; padding: 0 6px; font-size: 18px; color: inherit; }
+.tx-dismiss:hover { background: transparent; }
+
+/* debug disclosure */
+.debug { margin-top: 26px; }
+.debug > summary {
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+  padding: 8px 0;
+}
+
 /* ---------------- read-check panels ---------------- */
 .readout {
   margin-top: 22px;

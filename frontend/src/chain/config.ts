@@ -14,6 +14,8 @@ export const chainConfig = {
   gasPriceStep: { low: 0.0025, average: 0.025, high: 0.04 },
   contractAddress: import.meta.env.VITE_CONTRACT_ADDRESS ?? "",
   proposalId: Number(import.meta.env.VITE_PROPOSAL_ID ?? 0),
+  // Base URL of the explorer/wallet gov UI where users cast their real vote.
+  explorerBase: import.meta.env.VITE_EXPLORER_BASE ?? "https://www.mintscan.io/osmosis-testnet",
 };
 
 export type ChainConfig = typeof chainConfig;
