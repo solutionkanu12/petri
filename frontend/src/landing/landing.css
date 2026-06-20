@@ -1,6 +1,8 @@
 /* Petri landing page — reproduced from petri-velfi-style_2.html, scoped under .landing so it
    never collides with the dashboard's global styles. Color tokens come from global.css :root. */
 
+html { scroll-behavior: smooth; }
+
 .landing { font-family: var(--display); color: var(--bone); }
 .landing a { color: inherit; text-decoration: none; }
 .landing p { line-height: 1.6; }
@@ -362,6 +364,87 @@
   25% { transform: rotate(2deg); }
   75% { transform: rotate(-2deg); }
 }
+
+/* wallet picker modal */
+.landing .wallet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(10, 15, 30, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: walletFade 0.2s ease;
+}
+@keyframes walletFade { from { opacity: 0; } to { opacity: 1; } }
+.landing .wallet-modal {
+  width: min(420px, 100%);
+  color: var(--bone);
+  background: rgba(24, 32, 60, 0.92);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 28px;
+}
+.landing .wallet-modal-head { display: flex; align-items: center; justify-content: space-between; }
+.landing .wallet-modal-head h3 { font-family: var(--display); font-size: 24px; }
+.landing .wallet-close {
+  background: transparent;
+  border: 0;
+  color: var(--bone-dim);
+  font-size: 24px;
+  line-height: 1;
+  padding: 0 4px;
+  cursor: pointer;
+}
+.landing .wallet-close:hover { color: var(--bone); }
+.landing .wallet-sub { font-family: system-ui, sans-serif; font-size: 14px; color: var(--bone-dim); margin: 8px 0 20px; }
+.landing .wallet-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.landing .wallet-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--bone);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.landing button.wallet-row { cursor: pointer; }
+.landing button.wallet-row:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); border-color: var(--blue); }
+.landing button.wallet-row:disabled { cursor: progress; }
+.landing .wallet-row.is-soon { opacity: 0.5; }
+.landing .wallet-name { display: flex; align-items: center; gap: 12px; }
+.landing .wallet-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  background: var(--blue);
+  color: #fff;
+}
+.landing .wallet-state {
+  font-family: system-ui, sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--bone-faint);
+}
+.landing button.wallet-row .wallet-state { color: var(--blue-bright); }
+.landing .wallet-error { font-family: system-ui, sans-serif; color: var(--fail); font-size: 13px; margin: 16px 0 0; }
 
 /* responsive */
 @media (max-width: 900px) {

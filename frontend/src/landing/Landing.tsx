@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import { usePetriStore } from "../state/store";
+import { connectKeplr } from "../chain/keplr";
 import "./landing.css";
+
+// Cosmos wallets shown in the picker. Only Keplr is wired today; the rest are surfaced as
+// "coming soon" rather than faked.
+const WALLETS = [
+  { id: "keplr", name: "Keplr", ready: true },
+  { id: "leap", name: "Leap", ready: false },
+  { id: "cosmostation", name: "Cosmostation", ready: false },
+] as const;
 
 // Petri landing page — the entry point. "Open the app" / "Connect Wallet" call onEnter, which
 // switches the root into the existing market dashboard. Reproduces petri-velfi-style_2.html.
@@ -33,6 +43,10 @@ export default function Landing({ onEnter }: Props) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
   const [mascotUp, setMascotUp] = useState(false);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [connecting, setConnecting] = useState(false);
+  const [walletError, setWalletError] = useState<string | null>(null);
+  const setConnection = usePetriStore((s) => s.setConnection);
 
   // nav tucks up after 40px of scroll
   useEffect(() => {
@@ -80,6 +94,32 @@ export default function Landing({ onEnter }: Props) {
 
   const closeMenu = () => setMenuOpen(false);
 
+  function scrollToJoin() {
+    document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function openPicker() {
+    setWalletError(null);
+    setPickerOpen(true);
+  }
+
+  // Only Keplr is wired. On a successful connect, store the connection and redirect into the
+  // dashboard; otherwise surface the error and stay on the picker.
+  async function connectWithKeplr() {
+    setWalletError(null);
+    setConnecting(true);
+    try {
+      const { address, client } = await connectKeplr();
+      setConnection(address, client);
+      setPickerOpen(false);
+      onEnter();
+    } catch (e) {
+      setWalletError(e instanceof Error ? e.message : String(e));
+    } finally {
+      setConnecting(false);
+    }
+  }
+
   return (
     <div className="landing" ref={rootRef}>
       <nav className={shrink ? "shrink" : undefined}>
@@ -91,7 +131,7 @@ export default function Landing({ onEnter }: Props) {
           <a href="#steps">The experiment</a>
           <a href="#faq">FAQ</a>
         </div>
-        <button type="button" className="nav-cta btn-hover" onClick={onEnter}>
+        <button type="button" className="nav-cta btn-hover" onClick={scrollToJoin}>
           Connect Wallet
         </button>
         <div
@@ -118,7 +158,7 @@ export default function Landing({ onEnter }: Props) {
           href="#join"
           onClick={() => {
             closeMenu();
-            onEnter();
+            scrollToJoin();
           }}
         >
           Connect Wallet
@@ -135,7 +175,7 @@ export default function Landing({ onEnter }: Props) {
             A prediction market where you bet on how Cosmos Hub governance resolves, and only
             claim your winnings if you actually voted.
           </p>
-          <button type="button" className="cta btn-hover" onClick={onEnter}>
+          <button type="button" className="cta btn-hover" onClick={scrollToJoin}>
             Open the app
           </button>
         </div>
@@ -305,7 +345,7 @@ export default function Landing({ onEnter }: Props) {
             <p>
               Connect your wallet, pick a live Cosmos Hub proposal, and place your prediction.
             </p>
-            <button type="button" className="cta btn-hover" onClick={onEnter}>
+            <button type="button" className="cta btn-hover" onClick={openPicker}>
               Connect Wallet
             </button>
             <div className="orb-big">
@@ -352,6 +392,58 @@ export default function Landing({ onEnter }: Props) {
           </div>
         </div>
       </footer>
+
+      {pickerOpen && (
+        <div className="wallet-overlay" onClick={() => setPickerOpen(false)}>
+          <div className="wallet-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="wallet-modal-head">
+              <h3>Connect a wallet</h3>
+              <button
+                type="button"
+                className="wallet-close"
+                aria-label="close"
+                onClick={() => setPickerOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+            <p className="wallet-sub">Choose a Cosmos wallet to connect.</p>
+            <ul className="wallet-list">
+              {WALLETS.map((w) =>
+                w.ready ? (
+                  <li key={w.id}>
+                    <button
+                      type="button"
+                      className="wallet-row"
+                      onClick={connectWithKeplr}
+                      disabled={connecting}
+                    >
+                      <span className="wallet-name">
+                        <span className="wallet-badge">{w.name[0]}</span>
+                        {w.name}
+                      </span>
+                      <span className="wallet-state">
+                        {connecting ? "connecting" : "connect"}
+                      </span>
+                    </button>
+                  </li>
+                ) : (
+                  <li key={w.id}>
+                    <div className="wallet-row is-soon" aria-disabled="true">
+                      <span className="wallet-name">
+                        <span className="wallet-badge">{w.name[0]}</span>
+                        {w.name}
+                      </span>
+                      <span className="wallet-state">coming soon</span>
+                    </div>
+                  </li>
+                ),
+              )}
+            </ul>
+            {walletError && <p className="wallet-error">{walletError}</p>}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
