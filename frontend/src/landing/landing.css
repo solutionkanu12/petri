@@ -435,7 +435,11 @@ html { scroll-behavior: smooth; }
   font-size: 14px;
   background: var(--blue);
   color: #fff;
+  flex: 0 0 auto;
+  overflow: hidden;
 }
+.landing .wallet-badge.has-logo { background: rgba(255, 255, 255, 0.08); padding: 4px; }
+.landing .wallet-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
 .landing .wallet-state {
   font-family: system-ui, sans-serif;
   font-size: 12px;

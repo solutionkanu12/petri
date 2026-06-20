@@ -4,12 +4,27 @@ import { connectKeplr } from "../chain/keplr";
 import "./landing.css";
 
 // Cosmos wallets shown in the picker. Only Keplr is wired today; the rest are surfaced as
-// "coming soon" rather than faked.
+// "coming soon" rather than faked. `logo` points at the official brand asset in
+// /public/wallets; if the file is absent the icon falls back to a letter badge.
 const WALLETS = [
-  { id: "keplr", name: "Keplr", ready: true },
-  { id: "leap", name: "Leap", ready: false },
-  { id: "cosmostation", name: "Cosmostation", ready: false },
+  { id: "keplr", name: "Keplr", ready: true, logo: "/wallets/keplr.svg" },
+  { id: "leap", name: "Leap", ready: false, logo: "/wallets/leap.svg" },
+  { id: "cosmostation", name: "Cosmostation", ready: false, logo: "/wallets/cosmostation.svg" },
 ] as const;
+
+// Renders the wallet's official logo, falling back to a letter badge if the asset is missing
+// or fails to load.
+function WalletIcon({ name, src }: { name: string; src?: string }) {
+  const [errored, setErrored] = useState(false);
+  if (src && !errored) {
+    return (
+      <span className="wallet-badge has-logo">
+        <img src={src} alt="" onError={() => setErrored(true)} />
+      </span>
+    );
+  }
+  return <span className="wallet-badge">{name[0]}</span>;
+}
 
 // Petri landing page — the entry point. "Open the app" / "Connect Wallet" call onEnter, which
 // switches the root into the existing market dashboard. Reproduces petri-velfi-style_2.html.
@@ -419,7 +434,7 @@ export default function Landing({ onEnter }: Props) {
                       disabled={connecting}
                     >
                       <span className="wallet-name">
-                        <span className="wallet-badge">{w.name[0]}</span>
+                        <WalletIcon name={w.name} src={w.logo} />
                         {w.name}
                       </span>
                       <span className="wallet-state">
@@ -431,7 +446,7 @@ export default function Landing({ onEnter }: Props) {
                   <li key={w.id}>
                     <div className="wallet-row is-soon" aria-disabled="true">
                       <span className="wallet-name">
-                        <span className="wallet-badge">{w.name[0]}</span>
+                        <WalletIcon name={w.name} src={w.logo} />
                         {w.name}
                       </span>
                       <span className="wallet-state">coming soon</span>
