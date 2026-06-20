@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Petri — A prediction market for Cosmos Hub governance</title>
+<link rel="icon" type="image/png" href="/logo.png">
+<link rel="apple-touch-icon" href="/logo.png">
+<meta name="description" content="A prediction market for Cosmos Hub governance — governance, under observation.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Petri — A prediction market for Cosmos Hub governance">
+<meta property="og:description" content="Governance, under observation.">
+<meta property="og:image" content="/logo.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Petri — A prediction market for Cosmos Hub governance">
+<meta name="twitter:description" content="Governance, under observation.">
+<meta name="twitter:image" content="/logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Lilita+One&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -30,10 +41,7 @@
   nav { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 60; display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 12px 24px; width: min(1080px, calc(100% - 40px)); background: rgba(20,28,52,0.45); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 0.5px solid rgba(255,255,255,0.14); border-radius: 999px; box-shadow: 0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08); transition: padding .3s ease, top .3s ease; }
   nav.shrink { padding: 9px 22px; top: 10px; }
   .brand { display: flex; align-items: center; gap: 9px; font-size: 24px; }
-  .brand .mark { width: 22px; height: 22px; display: grid; grid-template-columns: repeat(3,1fr); gap: 2px; }
-  .brand .mark i { background: var(--blue); border-radius: 1px; animation: blink 3s infinite; }
-  .brand .mark i:nth-child(even) { background: var(--blue-bright); }
-  .brand .mark i:nth-child(2n){ animation-delay:.2s; } .brand .mark i:nth-child(3n){ animation-delay:.4s; }
+  .brand .brand-logo { width: 26px; height: 26px; border-radius: 7px; object-fit: cover; display: block; }
   @keyframes blink { 0%,90%,100%{opacity:1;} 95%{opacity:.4;} }
   .nav-mid { display: flex; gap: 30px; font-size: 16px; color: var(--bone-dim); }
   .nav-mid a { position: relative; }
@@ -157,7 +165,7 @@
 <body>
 
 <nav id="nav">
-  <div class="brand"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span> Petri</div>
+  <div class="brand"><img class="brand-logo" src="/logo.png" alt="Petri logo"> Petri</div>
   <div class="nav-mid"><a href="#what">How it works</a><a href="#steps">The experiment</a><a href="#faq">FAQ</a></div>
   <a class="nav-cta btn-hover" href="#join">Connect Wallet</a>
   <div class="burger" id="burger"><span></span><span></span><span></span></div>
