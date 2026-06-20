@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import { Dish } from "./components/Dish";
 import { WalletConnect } from "./components/WalletConnect";
 import { usePetriStore } from "./state/store";
 import { chainConfig } from "./chain/config";
@@ -60,6 +61,15 @@ export default function App() {
     void refresh();
   }, [refresh]);
 
+  // Keep the odds live: silently re-poll the market on an interval (no loading flicker).
+  useEffect(() => {
+    if (!chainConfig.contractAddress) return;
+    const id = setInterval(() => {
+      queryMarket().then(setMarket).catch(() => {});
+    }, 8000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <main className="petri">
       <nav className="topbar">
@@ -67,6 +77,8 @@ export default function App() {
         <span className="tagline">read check</span>
         <WalletConnect />
       </nav>
+
+      <Dish proposal={proposal} market={market} />
 
       <section className="readout">
         <h2>connection</h2>
