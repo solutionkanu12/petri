@@ -451,6 +451,7 @@ html { scroll-behavior: smooth; }
 }
 .landing button.wallet-row .wallet-state { color: var(--blue-bright); }
 .landing .wallet-error { font-family: system-ui, sans-serif; color: var(--fail); font-size: 13px; margin: 16px 0 0; }
+.landing .wallet-error a { color: var(--blue-bright); text-decoration: underline; }
 
 /* responsive */
 @media (max-width: 900px) {

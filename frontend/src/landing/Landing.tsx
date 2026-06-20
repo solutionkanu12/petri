@@ -1,17 +1,8 @@
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 import { usePetriStore } from "../state/store";
-import { connectKeplr } from "../chain/keplr";
+import { connectWallet, WALLETS, WalletNotInstalledError, type WalletId } from "../chain/keplr";
 import type { PageId } from "../pages/DocPage";
 import "./landing.css";
-
-// Cosmos wallets shown in the picker. Only Keplr is wired today; the rest are surfaced as
-// "coming soon" rather than faked. `logo` points at the official brand asset in
-// /public/wallets; if the file is absent the icon falls back to a letter badge.
-const WALLETS = [
-  { id: "keplr", name: "Keplr", ready: true, logo: "/wallets/keplr.svg" },
-  { id: "leap", name: "Leap", ready: false, logo: "/wallets/leap.svg" },
-  { id: "cosmostation", name: "Cosmostation", ready: false, logo: "/wallets/cosmostation.svg" },
-] as const;
 
 // "Built on the interchain" marquee: logo + name pairs, scrolled in a continuous loop.
 const MARQUEE = [
@@ -69,8 +60,10 @@ export default function Landing({ onEnter, onNavigate }: Props) {
   const [openFaq, setOpenFaq] = useState(0);
   const [mascotUp, setMascotUp] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [connecting, setConnecting] = useState(false);
-  const [walletError, setWalletError] = useState<string | null>(null);
+  const [connectingId, setConnectingId] = useState<WalletId | null>(null);
+  const [walletError, setWalletError] = useState<{ message: string; installUrl?: string } | null>(
+    null,
+  );
   const setConnection = usePetriStore((s) => s.setConnection);
 
   // nav tucks up after 40px of scroll
@@ -134,20 +127,24 @@ export default function Landing({ onEnter, onNavigate }: Props) {
     setPickerOpen(true);
   }
 
-  // Only Keplr is wired. On a successful connect, store the connection and redirect into the
-  // dashboard; otherwise surface the error and stay on the picker.
-  async function connectWithKeplr() {
+  // Connect the chosen wallet; on success store the connection and redirect into the dashboard.
+  // A missing extension surfaces an install link instead of failing silently.
+  async function connectWith(id: WalletId) {
     setWalletError(null);
-    setConnecting(true);
+    setConnectingId(id);
     try {
-      const { address, client } = await connectKeplr();
+      const { address, client } = await connectWallet(id);
       setConnection(address, client);
       setPickerOpen(false);
       onEnter();
     } catch (e) {
-      setWalletError(e instanceof Error ? e.message : String(e));
+      if (e instanceof WalletNotInstalledError) {
+        setWalletError({ message: e.message, installUrl: e.installUrl });
+      } else {
+        setWalletError({ message: e instanceof Error ? e.message : String(e) });
+      }
     } finally {
-      setConnecting(false);
+      setConnectingId(null);
     }
   }
 
@@ -451,38 +448,38 @@ export default function Landing({ onEnter, onNavigate }: Props) {
             </div>
             <p className="wallet-sub">Choose a Cosmos wallet to connect.</p>
             <ul className="wallet-list">
-              {WALLETS.map((w) =>
-                w.ready ? (
-                  <li key={w.id}>
-                    <button
-                      type="button"
-                      className="wallet-row"
-                      onClick={connectWithKeplr}
-                      disabled={connecting}
-                    >
-                      <span className="wallet-name">
-                        <WalletIcon name={w.name} src={w.logo} />
-                        {w.name}
-                      </span>
-                      <span className="wallet-state">
-                        {connecting ? "connecting" : "connect"}
-                      </span>
-                    </button>
-                  </li>
-                ) : (
-                  <li key={w.id}>
-                    <div className="wallet-row is-soon" aria-disabled="true">
-                      <span className="wallet-name">
-                        <WalletIcon name={w.name} src={w.logo} />
-                        {w.name}
-                      </span>
-                      <span className="wallet-state">coming soon</span>
-                    </div>
-                  </li>
-                ),
-              )}
+              {WALLETS.map((w) => (
+                <li key={w.id}>
+                  <button
+                    type="button"
+                    className="wallet-row"
+                    onClick={() => connectWith(w.id)}
+                    disabled={connectingId !== null}
+                  >
+                    <span className="wallet-name">
+                      <WalletIcon name={w.name} src={w.logo} />
+                      {w.name}
+                    </span>
+                    <span className="wallet-state">
+                      {connectingId === w.id ? "connecting" : "connect"}
+                    </span>
+                  </button>
+                </li>
+              ))}
             </ul>
-            {walletError && <p className="wallet-error">{walletError}</p>}
+            {walletError && (
+              <p className="wallet-error">
+                {walletError.message}
+                {walletError.installUrl && (
+                  <>
+                    {" "}
+                    <a href={walletError.installUrl} target="_blank" rel="noreferrer">
+                      Install
+                    </a>
+                  </>
+                )}
+              </p>
+            )}
           </div>
         </div>
       )}
