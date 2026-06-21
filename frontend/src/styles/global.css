@@ -37,6 +37,7 @@ body {
   line-height: 1.5;
   letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 .petri {
@@ -221,6 +222,35 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .actions-col { display: flex; flex-direction: column; gap: 22px; }
 @media (max-width: 680px) {
   .actions { grid-template-columns: 1fr; }
+}
+
+/* phones */
+@media (max-width: 640px) {
+  .petri { padding: 22px 16px 72px; }
+  .tagline { display: none; }
+  .dish { padding: 24px 20px 22px; }
+  .dish-title { overflow-wrap: anywhere; }
+  .dish-meta { gap: 26px; flex-wrap: wrap; }
+  .odds-legend { gap: 10px; }
+  .odds-key { padding: 12px 12px; }
+  .odds-key-pct { font-size: 26px; }
+  .bet-chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+    font-size: 12px;
+    padding: 11px 6px;
+  }
+  /* tap targets at least 44px */
+  .pill,
+  button.primary,
+  .bet-chip,
+  .link-btn,
+  button.ghost,
+  .wallet-row,
+  .wallet-menu-item { min-height: 44px; }
 }
 
 .action {

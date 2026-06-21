@@ -119,3 +119,11 @@
   transition: color 0.2s ease;
 }
 .docpage .doc-foot button:hover { color: var(--bone); }
+
+/* phones */
+@media (max-width: 600px) {
+  .docpage .doc-top { padding: 18px 16px; }
+  .docpage .doc-article { padding: 18px 16px 56px; }
+  .docpage .doc-foot { padding: 22px 16px 48px; }
+  .docpage .doc-back { min-height: 44px; display: inline-flex; align-items: center; }
+}

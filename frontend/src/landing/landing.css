@@ -122,7 +122,7 @@ html { scroll-behavior: smooth; }
 .landing .hero-inner { position: relative; z-index: 2; }
 .landing .hero h1 {
   font-family: var(--display);
-  font-size: 240px;
+  font-size: clamp(72px, 20vw, 240px);
   line-height: 0.88;
   color: #fff;
   text-shadow: 0 10px 70px rgba(40, 70, 180, 0.55);
@@ -376,7 +376,6 @@ html { scroll-behavior: smooth; }
   .landing .nav-mid,
   .landing .nav-cta { display: none; }
   .landing .burger { display: flex; }
-  .landing .hero h1 { font-size: 110px; }
   .landing .what,
   .landing .feat-row,
   .landing .who-cols,
@@ -391,4 +390,31 @@ html { scroll-behavior: smooth; }
   .landing .wrap { padding: 0 22px; }
   .landing .foot-mascot { width: 200px; right: 5%; }
   .landing .join { padding: 56px 32px; }
+}
+
+/* phones */
+@media (max-width: 600px) {
+  .landing .wrap { padding: 0 18px; }
+  .landing .pad { padding: 72px 0; }
+  .landing .hero .sub { font-size: 16px; margin: 24px auto 30px; }
+  .landing .hero .ch { font-size: 17px; letter-spacing: 0.3em; }
+  .landing .big,
+  .landing .what h2,
+  .landing .join h2 { font-size: 30px; }
+  .landing .join { padding: 44px 22px; min-height: auto; }
+  .landing .join .orb-big { width: 150px; right: -16px; bottom: -16px; opacity: 0.5; }
+  .landing .foot-bottom { height: 220px; }
+  .landing .foot-word { font-size: 64px; }
+  .landing .foot-mascot { width: 150px; right: 4%; }
+  .landing .foot-mascot.up { bottom: -80px; }
+  .landing .foot-cols a { padding: 6px 0; }
+  /* enlarge tap targets to at least 44px */
+  .landing .burger { width: 44px; height: 44px; padding: 0; align-items: center; justify-content: center; }
+  .landing .cta,
+  .landing .btn {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
