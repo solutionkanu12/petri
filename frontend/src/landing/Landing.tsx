@@ -1,6 +1,5 @@
 import { type MouseEvent, useEffect, useRef, useState } from "react";
-import { usePetriStore } from "../state/store";
-import { connectWallet, WALLETS, WalletNotInstalledError, type WalletId } from "../chain/keplr";
+import { WalletPicker } from "../components/WalletPicker";
 import type { PageId } from "../pages/DocPage";
 import "./landing.css";
 
@@ -11,20 +10,6 @@ const MARQUEE = [
   { name: "CosmWasm", logo: "/cosmwasm.png" },
   { name: "Mad Scientists", logo: "/madscientists.png" },
 ] as const;
-
-// Renders the wallet's official logo, falling back to a letter badge if the asset is missing
-// or fails to load.
-function WalletIcon({ name, src }: { name: string; src?: string }) {
-  const [errored, setErrored] = useState(false);
-  if (src && !errored) {
-    return (
-      <span className="wallet-badge has-logo">
-        <img src={src} alt="" onError={() => setErrored(true)} />
-      </span>
-    );
-  }
-  return <span className="wallet-badge">{name[0]}</span>;
-}
 
 // Petri landing page — the entry point. "Open the app" / "Connect Wallet" call onEnter, which
 // switches the root into the existing market dashboard. Reproduces petri-velfi-style_2.html.
@@ -60,11 +45,6 @@ export default function Landing({ onEnter, onNavigate }: Props) {
   const [openFaq, setOpenFaq] = useState(0);
   const [mascotUp, setMascotUp] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [connectingId, setConnectingId] = useState<WalletId | null>(null);
-  const [walletError, setWalletError] = useState<{ message: string; installUrl?: string } | null>(
-    null,
-  );
-  const setConnection = usePetriStore((s) => s.setConnection);
 
   // nav tucks up after 40px of scroll
   useEffect(() => {
@@ -123,29 +103,7 @@ export default function Landing({ onEnter, onNavigate }: Props) {
   };
 
   function openPicker() {
-    setWalletError(null);
     setPickerOpen(true);
-  }
-
-  // Connect the chosen wallet; on success store the connection and redirect into the dashboard.
-  // A missing extension surfaces an install link instead of failing silently.
-  async function connectWith(id: WalletId) {
-    setWalletError(null);
-    setConnectingId(id);
-    try {
-      const { address, client } = await connectWallet(id);
-      setConnection(address, client);
-      setPickerOpen(false);
-      onEnter();
-    } catch (e) {
-      if (e instanceof WalletNotInstalledError) {
-        setWalletError({ message: e.message, installUrl: e.installUrl });
-      } else {
-        setWalletError({ message: e instanceof Error ? e.message : String(e) });
-      }
-    } finally {
-      setConnectingId(null);
-    }
   }
 
   return (
@@ -433,55 +391,7 @@ export default function Landing({ onEnter, onNavigate }: Props) {
       </footer>
 
       {pickerOpen && (
-        <div className="wallet-overlay" onClick={() => setPickerOpen(false)}>
-          <div className="wallet-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="wallet-modal-head">
-              <h3>Connect a wallet</h3>
-              <button
-                type="button"
-                className="wallet-close"
-                aria-label="close"
-                onClick={() => setPickerOpen(false)}
-              >
-                ×
-              </button>
-            </div>
-            <p className="wallet-sub">Choose a Cosmos wallet to connect.</p>
-            <ul className="wallet-list">
-              {WALLETS.map((w) => (
-                <li key={w.id}>
-                  <button
-                    type="button"
-                    className="wallet-row"
-                    onClick={() => connectWith(w.id)}
-                    disabled={connectingId !== null}
-                  >
-                    <span className="wallet-name">
-                      <WalletIcon name={w.name} src={w.logo} />
-                      {w.name}
-                    </span>
-                    <span className="wallet-state">
-                      {connectingId === w.id ? "connecting" : "connect"}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-            {walletError && (
-              <p className="wallet-error">
-                {walletError.message}
-                {walletError.installUrl && (
-                  <>
-                    {" "}
-                    <a href={walletError.installUrl} target="_blank" rel="noreferrer">
-                      Install
-                    </a>
-                  </>
-                )}
-              </p>
-            )}
-          </div>
-        </div>
+        <WalletPicker onClose={() => setPickerOpen(false)} onConnected={onEnter} />
       )}
     </div>
   );

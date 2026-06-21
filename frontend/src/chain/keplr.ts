@@ -50,6 +50,32 @@ function getProvider(id: WalletId): Keplr | undefined {
   return window.cosmostation?.providers?.keplr;
 }
 
+// Remember the last wallet + address so a same-wallet reconnect can skip the chain-suggest
+// step (which is the part that can prompt) and reconnect without forcing a fresh approval.
+// This is NOT used to auto-reconnect on load: the picker is always shown first.
+const LAST_KEY = "petri:lastWallet";
+
+interface LastWallet {
+  id: WalletId;
+  address: string;
+}
+
+function readLast(): LastWallet | null {
+  try {
+    return JSON.parse(localStorage.getItem(LAST_KEY) ?? "null");
+  } catch {
+    return null;
+  }
+}
+
+function writeLast(value: LastWallet) {
+  try {
+    localStorage.setItem(LAST_KEY, JSON.stringify(value));
+  } catch {
+    // ignore storage failures (private mode, etc.)
+  }
+}
+
 function buildChainInfo(): ChainInfo {
   const { bech32Prefix: p, denom, denomDisplay, denomDecimals } = chainConfig;
   const currency = {
@@ -87,16 +113,21 @@ export async function connectWallet(id: WalletId): Promise<Connection> {
     throw new WalletNotInstalledError(name, meta?.installUrl ?? "");
   }
 
-  // Register the testnet chain (no-op if the wallet already knows it), then unlock + authorize.
-  try {
-    await provider.experimentalSuggestChain(buildChainInfo());
-  } catch {
-    // Some builds reject re-suggesting a known chain; enable() still works.
+  // Reconnecting the same wallet that was used last: the chain is already configured, so skip
+  // the suggest step to avoid an extra prompt. A different wallet runs the full enable flow.
+  const sameWalletAsLast = readLast()?.id === id;
+  if (!sameWalletAsLast) {
+    try {
+      await provider.experimentalSuggestChain(buildChainInfo());
+    } catch {
+      // Some builds reject re-suggesting a known chain; enable() still works.
+    }
   }
   await provider.enable(chainConfig.chainId);
 
   const signer = provider.getOfflineSigner(chainConfig.chainId);
   const accounts = await signer.getAccounts();
+  const address = accounts[0].address;
 
   const client = await SigningCosmWasmClient.connectWithSigner(
     chainConfig.rpcEndpoint,
@@ -104,7 +135,8 @@ export async function connectWallet(id: WalletId): Promise<Connection> {
     { gasPrice: GasPrice.fromString(`${chainConfig.gasPriceStep.average}${chainConfig.denom}`) },
   );
 
-  return { address: accounts[0].address, client };
+  writeLast({ id, address });
+  return { address, client };
 }
 
 /** Back-compat helper used by the dashboard connect button. */

@@ -77,10 +77,11 @@ button {
   padding: 11px 22px;
   border-radius: 999px;
   cursor: pointer;
-  transition: background 0.25s ease, opacity 0.25s ease;
+  transition: transform 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
 }
+/* signature hover: shrink slightly and turn white (matches the landing buttons) */
 .pill:hover,
-button:hover:not(:disabled) { background: var(--blue-bright); }
+button:hover:not(:disabled) { transform: scale(0.94); background: #fff; color: var(--ink); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* ---------------- dish ---------------- */
@@ -254,7 +255,7 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
   border-radius: 12px;
   padding: 12px 8px;
 }
-.bet-chip:hover:not(:disabled) { background: rgba(255, 255, 255, 0.08); }
+.bet-chip:hover:not(:disabled) { transform: scale(0.94); background: #fff; color: var(--ink); border-color: #fff; }
 .bet-chip.is-active { color: var(--ink); border-color: transparent; }
 .bet-chip-pass.is-active { background: var(--pass); }
 .bet-chip-fail.is-active { background: var(--fail); }
@@ -323,15 +324,15 @@ button.primary { align-self: stretch; padding: 13px 22px; font-size: 16px; }
   padding: 12px 18px;
   border-radius: 999px;
   white-space: nowrap;
-  transition: background 0.25s ease;
+  transition: transform 0.22s ease, background 0.22s ease, color 0.22s ease, border-color 0.22s ease;
 }
-.link-btn:hover { background: var(--blue-bright); }
+.link-btn:hover { transform: scale(0.94); background: #fff; color: var(--ink); }
 button.ghost {
   background: transparent;
   color: var(--bone-dim);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
-button.ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06); }
+button.ghost:hover:not(:disabled) { transform: scale(0.94); background: #fff; color: var(--ink); border-color: #fff; }
 
 /* claim panel */
 .claim-msg { margin: 0; font-size: 14px; line-height: 1.55; }
@@ -345,6 +346,113 @@ button.ghost:hover:not(:disabled) { background: rgba(255, 255, 255, 0.06); }
   padding: 14px 16px;
 }
 .claim-amount { margin: 0; font-family: var(--display); font-size: 24px; color: #fff; }
+
+/* wallet address pill + dropdown menu */
+.wallet-pill-wrap { position: relative; }
+.wallet-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 190px;
+  z-index: 70;
+  background: rgba(24, 32, 60, 0.95);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 6px;
+}
+.wallet-menu-item {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-family: var(--body);
+  font-size: 14px;
+  color: var(--bone);
+}
+/* keep the menu item a subtle highlight rather than the white signature hover */
+.wallet-menu-item:hover:not(:disabled) { transform: none; background: rgba(255, 255, 255, 0.08); color: var(--bone); }
+
+/* wallet picker modal (used on the landing and the dashboard) */
+.wallet-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(10, 15, 30, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: walletFade 0.2s ease;
+}
+@keyframes walletFade { from { opacity: 0; } to { opacity: 1; } }
+.wallet-modal {
+  width: min(420px, 100%);
+  color: var(--bone);
+  background: rgba(24, 32, 60, 0.92);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 0.5px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 28px;
+}
+.wallet-modal-head { display: flex; align-items: center; justify-content: space-between; }
+.wallet-modal-head h3 { font-family: var(--display); font-size: 24px; }
+.wallet-close {
+  background: transparent;
+  border: 0;
+  color: var(--bone-dim);
+  font-size: 24px;
+  line-height: 1;
+  padding: 0 6px;
+}
+.wallet-close:hover { transform: scale(0.94); background: #fff; color: var(--ink); border-radius: 8px; }
+.wallet-sub { font-family: system-ui, sans-serif; font-size: 14px; color: var(--bone-dim); margin: 8px 0 20px; }
+.wallet-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.wallet-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 0.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-family: var(--display);
+  font-size: 18px;
+  color: var(--bone);
+}
+/* keep rows as a subtle highlight (they carry logos), not the white signature hover */
+button.wallet-row:hover:not(:disabled) { transform: none; background: rgba(255, 255, 255, 0.08); color: var(--bone); border-color: var(--blue); }
+button.wallet-row:disabled { cursor: progress; }
+.wallet-name { display: flex; align-items: center; gap: 12px; }
+.wallet-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  background: var(--blue);
+  color: #fff;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+.wallet-badge.has-logo { background: rgba(255, 255, 255, 0.08); padding: 4px; }
+.wallet-badge img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.wallet-state { font-family: system-ui, sans-serif; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-faint); }
+button.wallet-row .wallet-state { color: var(--blue-bright); }
+.wallet-error { font-family: system-ui, sans-serif; color: var(--fail); font-size: 13px; margin: 16px 0 0; }
+.wallet-error a { color: var(--blue-bright); text-decoration: underline; }
 
 /* tx banner */
 .tx-banner {
