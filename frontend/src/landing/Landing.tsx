@@ -187,7 +187,7 @@ export default function Landing({ onEnter, onNavigate }: Props) {
             <div className="feat lead reveal">
               <h3>Just predict it</h3>
               <p>Stake on how the Hub will vote. The odds shift live as the crowd weighs in.</p>
-              <img className="dish" src="/petri-dish.png" alt="" />
+              <img className="lead-dish" src="/petri-dish.png" alt="" />
             </div>
             <div className="feat reveal d1">
               <h3>It provokes turnout</h3>

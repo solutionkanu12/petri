@@ -225,8 +225,8 @@ html { scroll-behavior: smooth; }
 .landing .feat:hover { transform: translateY(-8px); background: var(--panel-2); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35); }
 .landing .feat h3 { font-size: 24px; margin-bottom: 12px; }
 .landing .feat p { font-family: system-ui, sans-serif; font-size: 15px; color: var(--bone-dim); line-height: 1.55; max-width: 60%; }
-.landing .feat.lead .dish { position: absolute; right: -20px; bottom: -30px; width: 210px; opacity: 0.78; pointer-events: none; }
-.landing .feat.lead:hover .dish { animation: bobDish 5s ease-in-out infinite; }
+.landing .feat.lead .lead-dish { position: absolute; right: -20px; bottom: -30px; width: 210px; opacity: 0.78; pointer-events: none; }
+.landing .feat.lead:hover .lead-dish { animation: bobDish 5s ease-in-out infinite; }
 @keyframes bobDish {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
   50% { transform: translateY(-14px) rotate(2deg); }
