@@ -102,7 +102,7 @@ html { scroll-behavior: smooth; }
 .landing .hero-bg {
   position: absolute;
   inset: 0;
-  background: url("/fuid_dark.jpg") center / cover no-repeat;
+  background: url("/hero.jpg") center / cover no-repeat;
   transform: scale(1.05);
   animation: heroDrift 14s ease-in-out infinite alternate;
 }
@@ -114,7 +114,10 @@ html { scroll-behavior: smooth; }
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(120% 90% at 50% 50%, transparent 25%, rgba(10, 15, 30, 0.5) 72%, var(--ink) 100%);
+  /* subtle dark vignette behind the text, plus the edge fade into the page color */
+  background:
+    radial-gradient(60% 48% at 50% 42%, rgba(10, 15, 30, 0.55), transparent 70%),
+    radial-gradient(120% 90% at 50% 50%, transparent 25%, rgba(10, 15, 30, 0.5) 72%, var(--ink) 100%);
 }
 .landing .hero-inner { position: relative; z-index: 2; }
 .landing .hero h1 {
@@ -129,11 +132,12 @@ html { scroll-behavior: smooth; }
 }
 @keyframes heroIn { to { opacity: 1; transform: none; } }
 .landing .hero .ch {
-  font-size: 26px;
+  font-size: 20px;
   letter-spacing: 0.4em;
   text-transform: uppercase;
-  color: var(--bone-dim);
-  margin-top: 18px;
+  color: var(--bone);
+  margin-top: 8px;
+  text-shadow: 0 2px 18px rgba(10, 15, 30, 0.65);
   opacity: 0;
   animation: fadeUp 0.9s ease 0.55s forwards;
 }
