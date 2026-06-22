@@ -123,6 +123,11 @@ export async function connectWallet(id: WalletId): Promise<Connection> {
       // Some builds reject re-suggesting a known chain; enable() still works.
     }
   }
+  // Honor the explicit fee the dApp sets on each tx (see placeBet) instead of letting the
+  // wallet override it with the chain's registered gasPriceStep. Without this, Keplr/Leap
+  // re-price the tx at the registered "low" step, which sat below the chain minimum and caused
+  // persistent "insufficient fee" errors no matter what fee we computed.
+  provider.defaultOptions = { sign: { preferNoSetFee: true } };
   await provider.enable(chainConfig.chainId);
 
   const signer = provider.getOfflineSigner(chainConfig.chainId);

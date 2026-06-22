@@ -55,10 +55,13 @@ export async function placeBet(
   outcome: Outcome,
   amount: string,
 ) {
-  // Use an explicit gas limit so the fee comfortably clears the chain's minimum.
-  // fee = gasLimit * average gas price, e.g. 500000 * 0.25 = 125000 uosmo.
+  // Compute the fee at a high, explicit per-unit gas price (0.05 uosmo/gas, well above the
+  // chain minimum). Hardcoded so it never reads a lower config value. For this to actually be
+  // submitted, the wallet must honor the dApp fee (see preferNoSetFee in keplr.ts) instead of
+  // overriding it with its own registered gas price.
+  // fee = gasLimit * 0.05, i.e. 500000 * 0.05 = 25000 uosmo.
   const gasLimit = 500_000;
-  const feeAmount = Math.ceil(gasLimit * chainConfig.gasPriceStep.average);
+  const feeAmount = Math.ceil(gasLimit * 0.05);
   const fee = {
     amount: [{ denom: chainConfig.denom, amount: String(feeAmount) }],
     gas: String(gasLimit),
