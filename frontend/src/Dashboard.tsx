@@ -18,7 +18,21 @@ import type {
 } from "./types";
 
 function errMsg(e: unknown): string {
-  return e instanceof Error ? e.message : String(e);
+  const raw = e instanceof Error ? e.message : String(e);
+  const friendly: [RegExp, string][] = [
+    [/already has a bet on a different outcome/i,
+      "This wallet already has a bet on a different outcome. You can only add to your existing pick."],
+    [/insufficient fee|insufficient funds|fee.*too low/i,
+      "Not enough OSMO to cover the bet plus the network fee. Top up from the faucet and try again."],
+    [/voting (period )?closed|betting.*closed|market.*closed/i,
+      "Betting on this market is closed."],
+    [/request rejected|user rejected|denied/i,
+      "Wallet request was cancelled."],
+  ];
+  for (const [pattern, msg] of friendly) {
+    if (pattern.test(raw)) return msg;
+  }
+  return raw;
 }
 
 function nanosToMs(nanos: string | undefined): number {
