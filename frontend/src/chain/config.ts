@@ -11,7 +11,7 @@ export const chainConfig = {
   denom: import.meta.env.VITE_DENOM ?? "uosmo",
   denomDisplay: import.meta.env.VITE_DENOM_DISPLAY ?? "OSMO",
   denomDecimals: Number(import.meta.env.VITE_DENOM_DECIMALS ?? 6),
-  gasPriceStep: { low: 0.025, average: 0.05, high: 0.1 },
+  gasPriceStep: { low: 0.05, average: 0.1, high: 0.2 },
   contractAddress: import.meta.env.VITE_CONTRACT_ADDRESS ?? "",
   proposalId: Number(import.meta.env.VITE_PROPOSAL_ID ?? 0),
   // Base URL of the explorer/wallet gov UI where users cast their real vote.

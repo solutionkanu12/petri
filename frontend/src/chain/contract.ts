@@ -55,11 +55,19 @@ export async function placeBet(
   outcome: Outcome,
   amount: string,
 ) {
+  // Use an explicit gas limit so the fee comfortably clears the chain's minimum.
+  // fee = gasLimit * average gas price, e.g. 300000 * 0.1 = 30000 uosmo.
+  const gasLimit = 300_000;
+  const feeAmount = Math.ceil(gasLimit * chainConfig.gasPriceStep.average);
+  const fee = {
+    amount: [{ denom: chainConfig.denom, amount: String(feeAmount) }],
+    gas: String(gasLimit),
+  };
   return client.execute(
     sender,
     chainConfig.contractAddress,
     { place_bet: { outcome } },
-    "auto",
+    fee,
     undefined,
     [{ denom: chainConfig.denom, amount }],
   );
