@@ -20,7 +20,7 @@ export function VotePrompt({ voteStatus, rechecking, onRecheck }: Props) {
       <div className={`vote-status vote-status-${voteStatus}`}>
         <span className="vote-dot" />
         {voteStatus === "voted"
-          ? "voted — the claim gate is open to you"
+          ? "voted. the claim gate is open to you"
           : voteStatus === "not_voted"
             ? "not voted"
             : "vote status unknown"}
@@ -28,8 +28,8 @@ export function VotePrompt({ voteStatus, rechecking, onRecheck }: Props) {
 
       {voteStatus !== "voted" && (
         <p className="action-note">
-          Claiming requires a vote on record. Petri checks only that you voted, never how —
-          any option counts the same.
+          Claiming requires a vote on record. Petri checks only that you voted, never how.
+          Any option counts the same.
         </p>
       )}
 

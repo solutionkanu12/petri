@@ -49,7 +49,7 @@ export default function Dashboard({ onHome }: { onHome?: () => void }) {
     setLoading(true);
     const errs: string[] = [];
     if (!contractSet) {
-      errs.push("VITE_CONTRACT_ADDRESS is not set — set it in frontend/.env to read the contract.");
+      errs.push("VITE_CONTRACT_ADDRESS is not set. Set it in frontend/.env to read the contract.");
     } else {
       try {
         setConfig(await queryConfig());

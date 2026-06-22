@@ -28,7 +28,7 @@ export function OddsBar({ market }: { market: MarketResponse | null }) {
               key={p.outcome}
               className={`odds-seg odds-${p.outcome}`}
               style={{ width: `${pct}%` }}
-              title={`${OUTCOME_LABEL[p.outcome]} — ${toDisplay(p.amount)}`}
+              title={`${OUTCOME_LABEL[p.outcome]}: ${toDisplay(p.amount)}`}
             />
           );
         })}

@@ -24,7 +24,7 @@ export function ClaimPanel({ market, bet, voteStatus, submitting, onClaim }: Pro
   if (!market || !market.resolved) {
     return Shell(
       <p className="claim-msg is-info">
-        not yet cultured — waiting for the dish to resolve.
+        not yet cultured. waiting for the dish to resolve.
       </p>,
     );
   }
@@ -58,7 +58,7 @@ export function ClaimPanel({ market, bet, voteStatus, submitting, onClaim }: Pro
     return Shell(
       <>
         <p className="claim-msg is-info">
-          this dish was degenerate — no opposing pool to win from. your stake is refundable,
+          this dish was degenerate. no opposing pool to win from. your stake is refundable,
           no vote required.
         </p>
         <p className="claim-amount">refund: {formatDisplay(betAmount)}</p>
@@ -82,7 +82,7 @@ export function ClaimPanel({ market, bet, voteStatus, submitting, onClaim }: Pro
   if (!voted) {
     return Shell(
       <p className="claim-msg is-block">
-        Your prediction was correct — but this address has no vote on record for the proposal.
+        Your prediction was correct, but this address has no vote on record for the proposal.
         Petri rewards turnout, so the claim is blocked. The payout only opens to addresses that
         actually voted (any option counts; direction is never checked).
       </p>,
